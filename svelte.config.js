@@ -13,9 +13,6 @@ const config = {
     target: "#svelte",
     adapter: adapter(),
     ssr: false,
-    paths: {
-      base: dev ? "" : "/codecollab",
-    },
   },
 };
 
