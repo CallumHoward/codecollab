@@ -4,7 +4,7 @@
 <slot><!-- optional fallback --></slot>
 
 <style>
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 </style>

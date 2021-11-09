@@ -28,16 +28,16 @@ If you want to enable dark mode you will have to modify the tailwind.config.cjs 
 
 ```javascript
 module.exports = {
-	mode: 'jit',
-	purge: ['./src/**/*.svelte'],
-	darkMode: 'class', // or 'media'
-	theme: {
-		extend: {}
-	},
-	variants: {
-		extend: {}
-	},
-	plugins: []
+  mode: "jit",
+  purge: ["./src/**/*.svelte"],
+  darkMode: "class", // or 'media'
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
 };
 ```
 
