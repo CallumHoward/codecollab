@@ -1,45 +1,48 @@
 <script lang="ts">
-  const subtitle = "Helpful Links";
-  let timer = 0;
-  setInterval(() => {
-    timer++;
-  }, 1000);
+  import type monaco from "monaco-editor";
+  import { onMount } from "svelte";
+  import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+  import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+  import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
+  import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
+  import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+
+  let divEl: HTMLDivElement = null;
+  let editor: monaco.editor.IStandaloneCodeEditor;
+  let Monaco;
+
+  onMount(async () => {
+    // @ts-ignore
+    self.MonacoEnvironment = {
+      getWorker: function (_moduleId: any, label: string) {
+        if (label === "json") {
+          return new jsonWorker();
+        }
+        if (label === "css" || label === "scss" || label === "less") {
+          return new cssWorker();
+        }
+        if (label === "html" || label === "handlebars" || label === "razor") {
+          return new htmlWorker();
+        }
+        if (label === "typescript" || label === "javascript") {
+          return new tsWorker();
+        }
+        return new editorWorker();
+      },
+    };
+
+    Monaco = await import("monaco-editor");
+    editor = Monaco.editor.create(divEl, {
+      value: ["function x() {", '\tconsole.log("Hello world!");', "}"].join(
+        "\n"
+      ),
+      language: "javascript",
+    });
+
+    return () => {
+      editor.dispose();
+    };
+  });
 </script>
 
-<div
-  class="grid place-content-center m-20 p-20 border-2 border-blue-400 rounded-lg shadow-xl"
->
-  <h1 class="text-4xl mb-4">
-    <span class="text-[#FF3E00]">Sveltekit</span>
-    with
-    <span class="text-[#3178c6]">Typescript</span>
-    &
-    <span class="text-[#06B6D4]">Tailwwwind CSS</span>
-  </h1>
-  <h2 class="text-center text-3xl uppercase">{subtitle}</h2>
-  <h2 class="text-center text-3xl uppercase">{timer}</h2>
-  <hr />
-  <div class="mt-4 w-full">
-    <a href="https://kit.svelte.dev/" target="_blank">
-      <div
-        class="my-5 text-center font-semibold text-xl shadow-md rounded-xl p-4 border-2 border-blue-400 w-full hover:bg-blue-400 hover:text-white transition-colors duration-200 ease-linear"
-      >
-        SvelteKit Docs
-      </div>
-    </a>
-    <a href="https://www.typescriptlang.org/docs/" target="_blank">
-      <div
-        class="my-5 text-center font-semibold text-xl shadow-md rounded-xl p-4 border-2 border-blue-400 w-full hover:bg-blue-400 hover:text-white transition-colors duration-200 ease-linear"
-      >
-        Typescript Docs
-      </div>
-    </a>
-    <a href="https://tailwindcss.com/" target="_blank">
-      <div
-        class="my-5 text-center font-semibold text-xl shadow-md rounded-xl p-4 border-2 border-blue-400 w-full hover:bg-blue-400 hover:text-white transition-colors duration-200 ease-linear"
-      >
-        Tailwind Docs
-      </div>
-    </a>
-  </div>
-</div>
+<div bind:this={divEl} class="h-screen" />
